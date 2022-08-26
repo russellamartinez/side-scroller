@@ -44,6 +44,13 @@ class GameScene: SKScene {
         
     }
     
+    func touchDown(atPoint pos : CGPoint) {
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
+    }
+    
     func generateBackground(imageGroup: String, position: CGPoint, fillDensity: Int) -> AdjacentTileMap
     {
         let background = AdjacentTileMap(imagesNamed: [
@@ -66,13 +73,6 @@ class GameScene: SKScene {
         background.position = position
         addChild(background)
         return background
-    }
-    
-    func touchDown(atPoint pos : CGPoint) {
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
     }
     
     override func update(_ currentTime: TimeInterval) {
