@@ -15,10 +15,11 @@ class GameScene: SKScene {
     
     var backgroundA : AdjacentTileMap?
     var backgroundB : AdjacentTileMap?
-    private let mapCols : Int = Int(25)
-    private let mapRows : Int = Int(40)
-    private let tileSize : Int = Int(32)
-    private var fillDensity : Int = Int(25)
+    private let mapCols : Int = 25
+    private let mapRows : Int = 40
+    private let tileSize : Int = 32
+    private var fillDensity : Int = 7
+    private var offset : Int = 0
     
     private var lastUpdateTime : TimeInterval = 0
     
@@ -26,31 +27,26 @@ class GameScene: SKScene {
 
         self.lastUpdateTime = 0
 
+        offset = (mapCols * tileSize)/2
+        
         let cameraNode = SKCameraNode()
         cameraNode.position = CGPoint(x: 400, y: 400)
         self.addChild(cameraNode)
         self.camera = cameraNode
         
-        backgroundA = createTileMap(imageGroup: "green")
-        backgroundA?.anchorPoint = CGPoint(x: 0, y: 0)
-        backgroundB = createTileMap(imageGroup: "earth")
-        backgroundB?.anchorPoint = CGPoint(x: 0, y: 0)
+        backgroundA = generateBackground(imageGroup: "green",
+                                         position: CGPoint(x: 0, y: 0),
+                                         fillDensity: fillDensity)
         
-        generateBackground(background: backgroundA!,
-                           position: CGPoint(x: 0, y: 0),
-                           fillDensity: fillDensity)
-        
-        let offscreenX = Int((backgroundA?.frame.maxX)!)
-    
-        generateBackground(background: backgroundB!,
-                           position: CGPoint(x: offscreenX, y: 0),
-                           fillDensity: fillDensity)
+        backgroundB = generateBackground(imageGroup: "earth",
+                                         position: CGPoint(x: (backgroundA?.frame.maxX)!, y: 0),
+                                         fillDensity: fillDensity)
         
     }
     
-    func createTileMap(imageGroup: String) -> AdjacentTileMap
+    func generateBackground(imageGroup: String, position: CGPoint, fillDensity: Int) -> AdjacentTileMap
     {
-        return AdjacentTileMap(imagesNamed: [
+        let background = AdjacentTileMap(imagesNamed: [
         "center-\(imageGroup)",
             "down-edge-\(imageGroup)",
             "left-edge-\(imageGroup)",
@@ -65,13 +61,11 @@ class GameScene: SKScene {
             "upper-right-corner-\(imageGroup)",
             "upper-right-edge-\(imageGroup)"
         ], columns: mapCols, rows: mapRows, tileSize: CGSize(width: tileSize, height: tileSize))
-    }
-    
-    func generateBackground(background: AdjacentTileMap, position: CGPoint, fillDensity: Int)
-    {
-        background.fill(withDensity: 1)
+        background.anchorPoint = CGPoint(x: 0, y: 0)
+        background.fill(withDensity: fillDensity)
         background.position = position
         addChild(background)
+        return background
     }
     
     func touchDown(atPoint pos : CGPoint) {
@@ -94,18 +88,15 @@ class GameScene: SKScene {
         
         camera?.position.x += 2
         
-        let offset = (mapCols * tileSize)/2
-        
         if(backgroundA!.frame.maxX < (camera?.position.x)! - CGFloat(offset))
         {
             backgroundA?.removeFromParent()
             
             let offscreenX = Int((backgroundB?.position.x)!) + (mapCols * tileSize)
-            backgroundA = createTileMap(imageGroup: "green")
-            backgroundA?.anchorPoint = CGPoint(x: 0, y: 0)
-            generateBackground(background: backgroundA!
-                               , position: CGPoint(x: offscreenX
-                                , y: 0), fillDensity: fillDensity)
+            
+            backgroundA = generateBackground(imageGroup: "green",
+                                             position: CGPoint(x: offscreenX, y: 0),
+                                             fillDensity: fillDensity)
         }
 
         if(backgroundB!.frame.maxX < (camera?.position.x)! - CGFloat(offset))
@@ -113,11 +104,11 @@ class GameScene: SKScene {
             backgroundB?.removeFromParent()
             
             let offscreenX = Int((backgroundA?.position.x)!) + (mapCols * tileSize)
-            backgroundB = createTileMap(imageGroup: "earth")
-            backgroundB?.anchorPoint = CGPoint(x: 0, y: 0)
-            generateBackground(background: backgroundB!
-                               , position: CGPoint(x: offscreenX
-                                , y: 0), fillDensity: fillDensity)
+        
+            backgroundB = generateBackground(imageGroup: "earth",
+                                             position: CGPoint(x: offscreenX, y: 0),
+                                             fillDensity: fillDensity)
+        
         }
         
 
