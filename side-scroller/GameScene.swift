@@ -13,9 +13,11 @@ class GameScene: SKScene {
     var entities = [GKEntity]()
     var graphs = [String : GKGraph]()
     
+    lazy var player : SKNode? = childNode(withName: "player")
+    
     var backgroundA : AdjacentTileMap?
     var backgroundB : AdjacentTileMap?
-    private let mapCols : Int = 25
+    private let mapCols : Int = 50
     private let mapRows : Int = 40
     private let tileSize : Int = 32
     private var fillDensity : Int = 7
@@ -26,14 +28,11 @@ class GameScene: SKScene {
     override func sceneDidLoad() {
 
         self.lastUpdateTime = 0
+        
+        physicsWorld.contactDelegate = self
 
         offset = (mapCols * tileSize)/2
-        
-        let cameraNode = SKCameraNode()
-        cameraNode.position = CGPoint(x: 400, y: 400)
-        self.addChild(cameraNode)
-        self.camera = cameraNode
-        
+
         backgroundA = generateBackground(imageGroup: "green",
                                          position: CGPoint(x: 0, y: 0),
                                          fillDensity: fillDensity)
@@ -42,6 +41,35 @@ class GameScene: SKScene {
                                          position: CGPoint(x: (backgroundA?.frame.maxX)!, y: 0),
                                          fillDensity: fillDensity)
         
+        let cameraNode = SKCameraNode()
+        cameraNode.position = CGPoint(x: (backgroundA?.frame.midX)!, y: (backgroundA?.frame.midY)!)
+        self.addChild(cameraNode)
+        self.camera = cameraNode
+        
+        player?.position = camera!.position
+        player?.physicsBody = SKPhysicsBody(circleOfRadius: 8)
+        player?.physicsBody?.contactTestBitMask = PhysicsCategory.wall
+        player?.physicsBody?.categoryBitMask = PhysicsCategory.player
+    }
+
+    func touchDown(atPoint pos : CGPoint) {
+        if(pos.x > player!.position.x && pos.y > player!.position.y)
+        {
+            player!.physicsBody?.velocity = CGVector(dx: 250, dy: 500)
+        }else if(pos.x < player!.position.x && pos.y > player!.position.y)
+        {
+            player!.physicsBody?.velocity = CGVector(dx: -100, dy: 500)
+        }else if(pos.x < player!.position.x && pos.y < player!.position.y)
+        {
+            player!.physicsBody?.velocity = CGVector(dx: -100, dy: 250)
+        } else if (pos.x > player!.position.x && pos.y < player!.position.y)
+        {
+            player!.physicsBody?.velocity = CGVector(dx: 250, dy: 250)
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
     }
     
     func generateBackground(imageGroup: String, position: CGPoint, fillDensity: Int) -> AdjacentTileMap
@@ -64,15 +92,9 @@ class GameScene: SKScene {
         background.anchorPoint = CGPoint(x: 0, y: 0)
         background.fill(withDensity: fillDensity)
         background.position = position
+        background.setupPhysics()
         addChild(background)
         return background
-    }
-    
-    func touchDown(atPoint pos : CGPoint) {
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
     }
     
     override func update(_ currentTime: TimeInterval) {
