@@ -17,6 +17,9 @@
 		D218182D28B87A5F00F546B3 /* AdjacentTileMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = D218182C28B87A5F00F546B3 /* AdjacentTileMap.swift */; };
 		D218182F28B87B2900F546B3 /* GreenTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = D218182E28B87B2900F546B3 /* GreenTileSet.sks */; };
 		D28026B128B947E600C88619 /* EarthTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = D28026B028B947E600C88619 /* EarthTileSet.sks */; };
+		D2D082AD28B9998C0055265F /* PhysicsCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D082AC28B9998C0055265F /* PhysicsCategory.swift */; };
+		D2D082B028B99B450055265F /* GameScene+PhysicsContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D082AF28B99B450055265F /* GameScene+PhysicsContact.swift */; };
+		D2D082B228B99BE90055265F /* SKTileMapNode+PhysicsSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D082B128B99BE90055265F /* SKTileMapNode+PhysicsSetup.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +34,9 @@
 		D218182C28B87A5F00F546B3 /* AdjacentTileMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjacentTileMap.swift; sourceTree = "<group>"; };
 		D218182E28B87B2900F546B3 /* GreenTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GreenTileSet.sks; sourceTree = "<group>"; };
 		D28026B028B947E600C88619 /* EarthTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = EarthTileSet.sks; sourceTree = "<group>"; };
+		D2D082AC28B9998C0055265F /* PhysicsCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsCategory.swift; sourceTree = "<group>"; };
+		D2D082AF28B99B450055265F /* GameScene+PhysicsContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GameScene+PhysicsContact.swift"; sourceTree = "<group>"; };
+		D2D082B128B99BE90055265F /* SKTileMapNode+PhysicsSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKTileMapNode+PhysicsSetup.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +69,8 @@
 		D218181328B86A2700F546B3 /* side-scroller */ = {
 			isa = PBXGroup;
 			children = (
+				D2D082AE28B99B2B0055265F /* Extensions */,
+				D2D082AB28B999710055265F /* Enums */,
 				D218182B28B87A2F00F546B3 /* Tiles */,
 				D218181428B86A2700F546B3 /* AppDelegate.swift */,
 				D218181628B86A2700F546B3 /* GameScene.sks */,
@@ -83,6 +91,23 @@
 				D28026B028B947E600C88619 /* EarthTileSet.sks */,
 			);
 			path = Tiles;
+			sourceTree = "<group>";
+		};
+		D2D082AB28B999710055265F /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				D2D082AC28B9998C0055265F /* PhysicsCategory.swift */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
+		D2D082AE28B99B2B0055265F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D2D082AF28B99B450055265F /* GameScene+PhysicsContact.swift */,
+				D2D082B128B99BE90055265F /* SKTileMapNode+PhysicsSetup.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -159,10 +184,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2D082AD28B9998C0055265F /* PhysicsCategory.swift in Sources */,
+				D2D082B028B99B450055265F /* GameScene+PhysicsContact.swift in Sources */,
 				D218181B28B86A2700F546B3 /* GameScene.swift in Sources */,
 				D218181D28B86A2700F546B3 /* GameViewController.swift in Sources */,
 				D218182D28B87A5F00F546B3 /* AdjacentTileMap.swift in Sources */,
 				D218181528B86A2700F546B3 /* AppDelegate.swift in Sources */,
+				D2D082B228B99BE90055265F /* SKTileMapNode+PhysicsSetup.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
