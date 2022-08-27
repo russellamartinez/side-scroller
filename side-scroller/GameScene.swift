@@ -23,6 +23,8 @@ class GameScene: SKScene {
     private var fillDensity : Int = 7
     private var offset : Int = 0
     
+    private let score : SKLabelNode = SKLabelNode(text: "0")
+    
     private var lastUpdateTime : TimeInterval = 0
     
     override func sceneDidLoad() {
@@ -41,6 +43,9 @@ class GameScene: SKScene {
                                          position: CGPoint(x: (backgroundA?.frame.maxX)!, y: 0),
                                          fillDensity: fillDensity)
         
+        backgroundA?.generateGems()
+        backgroundB?.generateGems()
+        
         let cameraNode = SKCameraNode()
         cameraNode.position = CGPoint(x: (backgroundA?.frame.midX)!, y: (backgroundA?.frame.midY)!)
         self.addChild(cameraNode)
@@ -50,6 +55,11 @@ class GameScene: SKScene {
         player?.physicsBody = SKPhysicsBody(circleOfRadius: 8)
         player?.physicsBody?.contactTestBitMask = PhysicsCategory.wall
         player?.physicsBody?.categoryBitMask = PhysicsCategory.player
+    
+        score.position.x = camera!.position.x
+        score.position.y = UIScreen.main.nativeBounds.maxY - 75
+        addChild(score)
+       
     }
 
     func touchDown(atPoint pos : CGPoint) {
@@ -97,6 +107,13 @@ class GameScene: SKScene {
         return background
     }
     
+    func addToScore(points: Int)
+    {
+        var scoreModification = Int((score.text)!)
+        (scoreModification)! += points
+        score.text = "\(scoreModification ?? -1)"
+    }
+    
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
         
@@ -109,6 +126,7 @@ class GameScene: SKScene {
         let dt = currentTime - self.lastUpdateTime
         
         camera?.position.x += 2
+        score.position.x = camera!.position.x
         
         if(backgroundA!.frame.maxX < (camera?.position.x)! - CGFloat(offset))
         {
@@ -119,6 +137,8 @@ class GameScene: SKScene {
             backgroundA = generateBackground(imageGroup: "green",
                                              position: CGPoint(x: offscreenX, y: 0),
                                              fillDensity: fillDensity)
+        
+            backgroundA?.generateGems()
         }
 
         if(backgroundB!.frame.maxX < (camera?.position.x)! - CGFloat(offset))
@@ -131,9 +151,9 @@ class GameScene: SKScene {
                                              position: CGPoint(x: offscreenX, y: 0),
                                              fillDensity: fillDensity)
         
+            backgroundB?.generateGems()
         }
         
-
         // Update entities
         for entity in self.entities {
             entity.update(deltaTime: dt)
