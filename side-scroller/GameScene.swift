@@ -51,15 +51,14 @@ class GameScene: SKScene {
         self.addChild(cameraNode)
         self.camera = cameraNode
         
-        player?.position = camera!.position
+        player?.position = CGPoint(x: camera!.position.x, y: CGFloat((mapRows * tileSize) + 16))
         player?.physicsBody = SKPhysicsBody(circleOfRadius: 8)
         player?.physicsBody?.contactTestBitMask = PhysicsCategory.wall
         player?.physicsBody?.categoryBitMask = PhysicsCategory.player
-    
+            
         score.position.x = camera!.position.x
-        score.position.y = UIScreen.main.nativeBounds.maxY - 75
+        score.position.y = CGFloat(mapRows * tileSize)
         addChild(score)
-       
     }
 
     func touchDown(atPoint pos : CGPoint) {
@@ -124,9 +123,30 @@ class GameScene: SKScene {
         
         // Calculate time since last update
         let dt = currentTime - self.lastUpdateTime
-        
+
         camera?.position.x += 2
         score.position.x = camera!.position.x
+        
+        // check for game reset
+        if((player?.position.x)! < (camera?.position.x)! - UIScreen.main.bounds.width/2 ||
+           (player?.position.y)! < (camera?.position.y)! - UIScreen.main.bounds.height/2 - 100)
+        {
+            backgroundA?.removeFromParent()
+            backgroundB?.removeFromParent()
+            camera!.position = CGPoint(x: (backgroundA?.frame.midX)!, y: (backgroundA?.frame.midY)!)
+            player?.position = CGPoint(x: camera!.position.x, y: CGFloat((mapRows * tileSize) + 16))
+            player?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            score.text = "0"
+            backgroundA = generateBackground(imageGroup: "green",
+                                             position: CGPoint(x: 0, y: 0),
+                                             fillDensity: fillDensity)
+                            
+            backgroundB = generateBackground(imageGroup: "earth",
+                                             position: CGPoint(x: (backgroundA?.frame.maxX)!, y: 0),
+                                             fillDensity: fillDensity)
+            backgroundA?.generateGems()
+            backgroundB?.generateGems()
+        }
         
         if(backgroundA!.frame.maxX < (camera?.position.x)! - CGFloat(offset))
         {
