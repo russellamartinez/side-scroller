@@ -21,8 +21,13 @@ extension GameScene: SKPhysicsContactDelegate {
         
             addToScore(points: 5)
             collectableNode.removeFromParent()
-        
-            camera!.run(camera!.GetCameraZoomSequence())
+      
+            if(Bool.random())
+            {
+                camera!.run(camera!.GetCameraZoomSequence())
+            }else{
+                camera!.run(camera!.GetCameraRotationSequence())
+            }
         }
     }
 }

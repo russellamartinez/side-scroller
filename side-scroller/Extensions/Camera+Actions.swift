@@ -79,4 +79,84 @@ extension SKCameraNode {
         
         return sequence
     }
+    
+    func GetCameraRotationSequence() -> SKAction {
+        
+        let customAction0 = SKAction.customAction(withDuration: 0.0) {
+            node, elapsedTime in
+            if let node = node as? SKCameraNode {
+                node.zRotation = 0
+            }
+        }
+        
+        let customAction1 = SKAction.customAction(withDuration: 0.0) {
+            node, elapsedTime in
+            if let node = node as? SKCameraNode {
+                node.zRotation = 0.1
+            }
+        }
+        
+        let customAction2 = SKAction.customAction(withDuration: 0.0) {
+            node, elapsedTime in
+            if let node = node as? SKCameraNode {
+                node.zRotation = 0.2
+            }
+        }
+        
+        let customAction3 = SKAction.customAction(withDuration: 0.0) {
+            node, elapsedTime in
+            if let node = node as? SKCameraNode {
+                node.zRotation = 0.3
+            }
+        }
+        
+        let customAction4 = SKAction.customAction(withDuration: 0.0) {
+            node, elapsedTime in
+            if let node = node as? SKCameraNode {
+                node.zRotation = -0.1
+            }
+        }
+        
+        let customAction5 = SKAction.customAction(withDuration: 0.0) {
+            node, elapsedTime in
+            if let node = node as? SKCameraNode {
+                node.zRotation = -0.2
+            }
+        }
+        
+        let customAction6 = SKAction.customAction(withDuration: 0.0) {
+            node, elapsedTime in
+            if let node = node as? SKCameraNode {
+                node.zRotation = -0.3
+            }
+        }
+        
+        let animationWait = 0.015
+        let sequence = SKAction.sequence([
+            customAction1,
+            SKAction.wait(forDuration: animationWait),
+            customAction2,
+            SKAction.wait(forDuration: animationWait),
+            customAction3,
+            SKAction.wait(forDuration: animationWait),
+            customAction2,
+            SKAction.wait(forDuration: animationWait),
+            customAction1,
+            SKAction.wait(forDuration: animationWait),
+            customAction0,
+            SKAction.wait(forDuration: animationWait),
+            customAction4,
+            SKAction.wait(forDuration: animationWait),
+            customAction5,
+            SKAction.wait(forDuration: animationWait),
+            customAction6,
+            SKAction.wait(forDuration: animationWait),
+            customAction5,
+            SKAction.wait(forDuration: animationWait),
+            customAction4,
+            SKAction.wait(forDuration: animationWait),
+            customAction0])
+        
+        return sequence
+    }
 }
