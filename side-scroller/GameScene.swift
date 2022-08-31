@@ -15,6 +15,7 @@ class GameScene: SKScene {
     
     lazy var player : SKNode? = childNode(withName: "player")
     private let fireball : SKSpriteNode = SKSpriteNode(imageNamed: "fireball")
+    private let ufo : Ufo = Ufo(imageNamed: "ufo")
     
     var backgroundA : AdjacentTileMap?
     var backgroundB : AdjacentTileMap?
@@ -71,6 +72,15 @@ class GameScene: SKScene {
         fireball.physicsBody?.contactTestBitMask = PhysicsCategory.player
         fireball.physicsBody?.categoryBitMask = PhysicsCategory.fireball
         addChild(fireball)
+       
+        ufo.name = "ufo"
+        ufo.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(8.0))
+        ufo.physicsBody?.affectedByGravity = false
+        ufo.physicsBody?.allowsRotation = false
+        ufo.physicsBody?.contactTestBitMask = PhysicsCategory.player | PhysicsCategory.collectable
+        ufo.physicsBody?.categoryBitMask = PhysicsCategory.ufo
+        ufo.position = CGPoint(x: camera!.position.x, y: camera!.position.y)
+        addChild(ufo)
     }
 
     func touchDown(atPoint pos : CGPoint) {
@@ -142,6 +152,23 @@ class GameScene: SKScene {
                                          fillDensity: fillDensity)
         backgroundA?.generateGems()
         backgroundB?.generateGems()
+    
+        ufo.position = CGPoint(x: camera!.position.x, y: camera!.position.y)
+    }
+   
+    func unitVector(point1: CGPoint, point2: CGPoint) -> CGVector {
+ 
+        var a = point1.x - point2.x
+        var b = point1.y - point2.y
+       
+        // calc magnitude
+        let m = sqrt(a*a+b*b)
+      
+        // calc unit vector
+        a = a/m
+        b = b/m
+        
+        return CGVector(dx: a, dy: b)
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -201,13 +228,21 @@ class GameScene: SKScene {
             fireball.position = CGPoint(x: Int(fireballX), y: Int(fireballY))
             addChild(fireball)
         }
-        
+      
         // Update entities
         for entity in self.entities {
             entity.update(deltaTime: dt)
         }
         
         fireball.position.x -= 16
+       
+        let v = unitVector(point1: CGPoint(x: player!.position.x, y: player!.position.y),
+                           point2: CGPoint(x: ufo.position.x, y: (ufo.position.y)))
+        
+        let m2 = 2.00
+        
+        ufo.physicsBody?.applyForce(CGVector(dx: v.dx * m2, dy: v.dy * m2))
+        
         self.lastUpdateTime = currentTime
     }
 }
