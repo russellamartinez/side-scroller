@@ -29,5 +29,10 @@ extension GameScene: SKPhysicsContactDelegate {
                 camera!.run(camera!.GetCameraRotationSequence())
             }
         }
+        
+        if(collision == (PhysicsCategory.player | PhysicsCategory.fireball))
+        {
+            resetGame()
+        }
     }
 }
