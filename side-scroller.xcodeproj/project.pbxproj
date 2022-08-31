@@ -16,6 +16,8 @@
 		D218182528B86A2800F546B3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D218182328B86A2800F546B3 /* LaunchScreen.storyboard */; };
 		D218182D28B87A5F00F546B3 /* AdjacentTileMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = D218182C28B87A5F00F546B3 /* AdjacentTileMap.swift */; };
 		D218182F28B87B2900F546B3 /* GreenTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = D218182E28B87B2900F546B3 /* GreenTileSet.sks */; };
+		D254CB2F28C024F20046D939 /* Fireball.swift in Sources */ = {isa = PBXBuildFile; fileRef = D254CB2E28C024F20046D939 /* Fireball.swift */; };
+		D254CB3128C025F80046D939 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = D254CB3028C025F80046D939 /* Player.swift */; };
 		D28026B128B947E600C88619 /* EarthTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = D28026B028B947E600C88619 /* EarthTileSet.sks */; };
 		D2AE6C0D28BF041100CEA433 /* Ufo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2AE6C0C28BF041100CEA433 /* Ufo.swift */; };
 		D2B21A0A28B9AF6D004547EF /* SKTileMapNode+TileAppend.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B21A0928B9AF6D004547EF /* SKTileMapNode+TileAppend.swift */; };
@@ -36,6 +38,8 @@
 		D218182428B86A2800F546B3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D218182C28B87A5F00F546B3 /* AdjacentTileMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjacentTileMap.swift; sourceTree = "<group>"; };
 		D218182E28B87B2900F546B3 /* GreenTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GreenTileSet.sks; sourceTree = "<group>"; };
+		D254CB2E28C024F20046D939 /* Fireball.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fireball.swift; sourceTree = "<group>"; };
+		D254CB3028C025F80046D939 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		D28026B028B947E600C88619 /* EarthTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = EarthTileSet.sks; sourceTree = "<group>"; };
 		D2AE6C0C28BF041100CEA433 /* Ufo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ufo.swift; sourceTree = "<group>"; };
 		D2B21A0928B9AF6D004547EF /* SKTileMapNode+TileAppend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKTileMapNode+TileAppend.swift"; sourceTree = "<group>"; };
@@ -104,6 +108,8 @@
 			isa = PBXGroup;
 			children = (
 				D2AE6C0C28BF041100CEA433 /* Ufo.swift */,
+				D254CB2E28C024F20046D939 /* Fireball.swift */,
+				D254CB3028C025F80046D939 /* Player.swift */,
 			);
 			path = GameObjects;
 			sourceTree = "<group>";
@@ -201,9 +207,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D254CB2F28C024F20046D939 /* Fireball.swift in Sources */,
 				D2D082AD28B9998C0055265F /* PhysicsCategory.swift in Sources */,
 				D2D082B028B99B450055265F /* GameScene+PhysicsContact.swift in Sources */,
 				D2C5F2DB28BB3CBB003F8EB5 /* Camera+Actions.swift in Sources */,
+				D254CB3128C025F80046D939 /* Player.swift in Sources */,
 				D2B21A0A28B9AF6D004547EF /* SKTileMapNode+TileAppend.swift in Sources */,
 				D2AE6C0D28BF041100CEA433 /* Ufo.swift in Sources */,
 				D218181B28B86A2700F546B3 /* GameScene.swift in Sources */,
