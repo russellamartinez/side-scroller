@@ -14,6 +14,7 @@ class GameScene: SKScene {
     var graphs = [String : GKGraph]()
     
     lazy var player : SKNode? = childNode(withName: "player")
+    private let fireball : SKSpriteNode = SKSpriteNode(imageNamed: "fireball")
     
     var backgroundA : AdjacentTileMap?
     var backgroundB : AdjacentTileMap?
@@ -59,6 +60,17 @@ class GameScene: SKScene {
         score.position.x = camera!.position.x
         score.position.y = CGFloat(mapRows * tileSize)
         addChild(score)
+        
+        let fireballX = UIScreen.main.nativeBounds.width
+        let fireBallTopY : Int = Int((player?.position.y)!) + tileSize
+        let fireBallBottomY : Int = Int((player?.position.y)!) - tileSize
+        let fireballY = Int.random(in: fireBallBottomY ..< fireBallTopY)
+        fireball.position = CGPoint(x: Int(fireballX), y: Int(fireballY))
+        fireball.physicsBody = SKPhysicsBody(circleOfRadius: 4)
+        fireball.physicsBody?.affectedByGravity = false
+        fireball.physicsBody?.contactTestBitMask = PhysicsCategory.player
+        fireball.physicsBody?.categoryBitMask = PhysicsCategory.fireball
+        addChild(fireball)
     }
 
     func touchDown(atPoint pos : CGPoint) {
@@ -113,6 +125,25 @@ class GameScene: SKScene {
         score.text = "\(scoreModification ?? -1)"
     }
     
+    func resetGame()
+    {
+        backgroundA?.removeFromParent()
+        backgroundB?.removeFromParent()
+        camera!.position = CGPoint(x: (backgroundA?.frame.midX)!, y: (backgroundA?.frame.midY)!)
+        player?.position = CGPoint(x: camera!.position.x, y: CGFloat((mapRows * tileSize) + 16))
+        player?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+        score.text = "0"
+        backgroundA = generateBackground(imageGroup: "green",
+                                         position: CGPoint(x: 0, y: 0),
+                                         fillDensity: fillDensity)
+                        
+        backgroundB = generateBackground(imageGroup: "earth",
+                                         position: CGPoint(x: (backgroundA?.frame.maxX)!, y: 0),
+                                         fillDensity: fillDensity)
+        backgroundA?.generateGems()
+        backgroundB?.generateGems()
+    }
+    
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
         
@@ -131,21 +162,7 @@ class GameScene: SKScene {
         if((player?.position.x)! < (camera?.position.x)! - UIScreen.main.bounds.width/2 ||
            (player?.position.y)! < (camera?.position.y)! - UIScreen.main.bounds.height/2 - 100)
         {
-            backgroundA?.removeFromParent()
-            backgroundB?.removeFromParent()
-            camera!.position = CGPoint(x: (backgroundA?.frame.midX)!, y: (backgroundA?.frame.midY)!)
-            player?.position = CGPoint(x: camera!.position.x, y: CGFloat((mapRows * tileSize) + 16))
-            player?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            score.text = "0"
-            backgroundA = generateBackground(imageGroup: "green",
-                                             position: CGPoint(x: 0, y: 0),
-                                             fillDensity: fillDensity)
-                            
-            backgroundB = generateBackground(imageGroup: "earth",
-                                             position: CGPoint(x: (backgroundA?.frame.maxX)!, y: 0),
-                                             fillDensity: fillDensity)
-            backgroundA?.generateGems()
-            backgroundB?.generateGems()
+            resetGame()
         }
         
         if(backgroundA!.frame.maxX < (camera?.position.x)! - CGFloat(offset))
@@ -174,11 +191,23 @@ class GameScene: SKScene {
             backgroundB?.generateGems()
         }
         
+        if(fireball.frame.maxX < (camera?.position.x)! - CGFloat(offset))
+        {
+            fireball.removeFromParent()
+            let fireballX = UIScreen.main.nativeBounds.width + (camera?.position.x)!
+            let fireBallTopY : Int = Int((player?.position.y)!) + tileSize
+            let fireBallBottomY : Int = Int((player?.position.y)!) - tileSize
+            let fireballY = Int.random(in: fireBallBottomY ..< fireBallTopY)
+            fireball.position = CGPoint(x: Int(fireballX), y: Int(fireballY))
+            addChild(fireball)
+        }
+        
         // Update entities
         for entity in self.entities {
             entity.update(deltaTime: dt)
         }
         
+        fireball.position.x -= 16
         self.lastUpdateTime = currentTime
     }
 }
