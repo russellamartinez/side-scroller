@@ -13,9 +13,9 @@ class GameScene: SKScene {
     var entities = [GKEntity]()
     var graphs = [String : GKGraph]()
     
-    lazy var player : SKNode? = childNode(withName: "player")
-    private let fireball : SKSpriteNode = SKSpriteNode(imageNamed: "fireball")
-    private let ufo : Ufo = Ufo(imageNamed: "ufo")
+    private let player : Player = Player()
+    private let fireball : Fireball = Fireball()
+    private let ufo : Ufo = Ufo()
     
     var backgroundA : AdjacentTileMap?
     var backgroundB : AdjacentTileMap?
@@ -53,49 +53,34 @@ class GameScene: SKScene {
         self.addChild(cameraNode)
         self.camera = cameraNode
         
-        player?.position = CGPoint(x: camera!.position.x, y: CGFloat((mapRows * tileSize) + 16))
-        player?.physicsBody = SKPhysicsBody(circleOfRadius: 8)
-        player?.physicsBody?.contactTestBitMask = PhysicsCategory.wall
-        player?.physicsBody?.categoryBitMask = PhysicsCategory.player
-            
+        player.position = CGPoint(x: camera!.position.x, y: CGFloat((mapRows * tileSize) + 16))
+        addChild(player)
+        
         score.position.x = camera!.position.x
         score.position.y = CGFloat(mapRows * tileSize)
         addChild(score)
         
-        let fireballX = UIScreen.main.nativeBounds.width
-        let fireBallTopY : Int = Int((player?.position.y)!) + tileSize
-        let fireBallBottomY : Int = Int((player?.position.y)!) - tileSize
-        let fireballY = Int.random(in: fireBallBottomY ..< fireBallTopY)
-        fireball.position = CGPoint(x: Int(fireballX), y: Int(fireballY))
-        fireball.physicsBody = SKPhysicsBody(circleOfRadius: 4)
-        fireball.physicsBody?.affectedByGravity = false
-        fireball.physicsBody?.contactTestBitMask = PhysicsCategory.player
-        fireball.physicsBody?.categoryBitMask = PhysicsCategory.fireball
+        let spawnPoint = getFireballStartingLocation()
+        fireball.position = spawnPoint
         addChild(fireball)
-       
-        ufo.name = "ufo"
-        ufo.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(8.0))
-        ufo.physicsBody?.affectedByGravity = false
-        ufo.physicsBody?.allowsRotation = false
-        ufo.physicsBody?.contactTestBitMask = PhysicsCategory.player | PhysicsCategory.collectable
-        ufo.physicsBody?.categoryBitMask = PhysicsCategory.ufo
+        
         ufo.position = CGPoint(x: camera!.position.x, y: camera!.position.y)
         addChild(ufo)
     }
 
     func touchDown(atPoint pos : CGPoint) {
-        if(pos.x > player!.position.x && pos.y > player!.position.y)
+        if(pos.x > player.position.x && pos.y > player.position.y)
         {
-            player!.physicsBody?.velocity = CGVector(dx: 250, dy: 500)
-        }else if(pos.x < player!.position.x && pos.y > player!.position.y)
+            player.physicsBody?.velocity = CGVector(dx: 250, dy: 500)
+        }else if(pos.x < player.position.x && pos.y > player.position.y)
         {
-            player!.physicsBody?.velocity = CGVector(dx: -100, dy: 500)
-        }else if(pos.x < player!.position.x && pos.y < player!.position.y)
+            player.physicsBody?.velocity = CGVector(dx: -100, dy: 500)
+        }else if(pos.x < player.position.x && pos.y < player.position.y)
         {
-            player!.physicsBody?.velocity = CGVector(dx: -100, dy: 250)
-        } else if (pos.x > player!.position.x && pos.y < player!.position.y)
+            player.physicsBody?.velocity = CGVector(dx: -100, dy: 250)
+        } else if (pos.x > player.position.x && pos.y < player.position.y)
         {
-            player!.physicsBody?.velocity = CGVector(dx: 250, dy: 250)
+            player.physicsBody?.velocity = CGVector(dx: 250, dy: 250)
         }
     }
     
@@ -140,8 +125,8 @@ class GameScene: SKScene {
         backgroundA?.removeFromParent()
         backgroundB?.removeFromParent()
         camera!.position = CGPoint(x: (backgroundA?.frame.midX)!, y: (backgroundA?.frame.midY)!)
-        player?.position = CGPoint(x: camera!.position.x, y: CGFloat((mapRows * tileSize) + 16))
-        player?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+        player.position = CGPoint(x: camera!.position.x, y: CGFloat((mapRows * tileSize) + 16))
+        player.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
         score.text = "0"
         backgroundA = generateBackground(imageGroup: "green",
                                          position: CGPoint(x: 0, y: 0),
@@ -156,19 +141,13 @@ class GameScene: SKScene {
         ufo.position = CGPoint(x: camera!.position.x, y: camera!.position.y)
     }
    
-    func unitVector(point1: CGPoint, point2: CGPoint) -> CGVector {
- 
-        var a = point1.x - point2.x
-        var b = point1.y - point2.y
-       
-        // calc magnitude
-        let m = sqrt(a*a+b*b)
-      
-        // calc unit vector
-        a = a/m
-        b = b/m
         
-        return CGVector(dx: a, dy: b)
+    func getFireballStartingLocation() -> CGPoint {
+        let x = UIScreen.main.nativeBounds.width + (camera?.position.x)!
+        let topY : Int = Int(player.position.y) + tileSize
+        let bottomY : Int = Int(player.position.y) - tileSize
+        let y = Int.random(in: bottomY ..< topY)
+        return CGPoint(x: Int(x), y: Int(y))
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -186,8 +165,8 @@ class GameScene: SKScene {
         score.position.x = camera!.position.x
         
         // check for game reset
-        if((player?.position.x)! < (camera?.position.x)! - UIScreen.main.bounds.width/2 ||
-           (player?.position.y)! < (camera?.position.y)! - UIScreen.main.bounds.height/2 - 100)
+        if(player.position.x < (camera?.position.x)! - UIScreen.main.bounds.width/2 ||
+           player.position.y < (camera?.position.y)! - UIScreen.main.bounds.height/2 - 100)
         {
             resetGame()
         }
@@ -221,11 +200,8 @@ class GameScene: SKScene {
         if(fireball.frame.maxX < (camera?.position.x)! - CGFloat(offset))
         {
             fireball.removeFromParent()
-            let fireballX = UIScreen.main.nativeBounds.width + (camera?.position.x)!
-            let fireBallTopY : Int = Int((player?.position.y)!) + tileSize
-            let fireBallBottomY : Int = Int((player?.position.y)!) - tileSize
-            let fireballY = Int.random(in: fireBallBottomY ..< fireBallTopY)
-            fireball.position = CGPoint(x: Int(fireballX), y: Int(fireballY))
+            let spawnPoint = getFireballStartingLocation()
+            fireball.position = spawnPoint
             addChild(fireball)
         }
       
@@ -236,8 +212,9 @@ class GameScene: SKScene {
         
         fireball.position.x -= 16
        
-        let v = unitVector(point1: CGPoint(x: player!.position.x, y: player!.position.y),
-                           point2: CGPoint(x: ufo.position.x, y: (ufo.position.y)))
+        let v = CGVector
+                .unitVector(point1: CGPoint(x: player.position.x, y: player.position.y),
+                            point2: CGPoint(x: ufo.position.x, y: (ufo.position.y)))
         
         let m2 = 2.00
         
