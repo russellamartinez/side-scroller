@@ -141,21 +141,7 @@ class GameScene: SKScene {
         ufo.position = CGPoint(x: camera!.position.x, y: camera!.position.y)
     }
    
-    func unitVector(point1: CGPoint, point2: CGPoint) -> CGVector {
- 
-        var a = point1.x - point2.x
-        var b = point1.y - point2.y
-       
-        // calc magnitude
-        let m = sqrt(a*a+b*b)
-      
-        // calc unit vector
-        a = a/m
-        b = b/m
         
-        return CGVector(dx: a, dy: b)
-    }
-    
     func getFireballStartingLocation() -> CGPoint {
         let x = UIScreen.main.nativeBounds.width + (camera?.position.x)!
         let topY : Int = Int(player.position.y) + tileSize
@@ -226,8 +212,9 @@ class GameScene: SKScene {
         
         fireball.position.x -= 16
        
-        let v = unitVector(point1: CGPoint(x: player.position.x, y: player.position.y),
-                           point2: CGPoint(x: ufo.position.x, y: (ufo.position.y)))
+        let v = CGVector
+                .unitVector(point1: CGPoint(x: player.position.x, y: player.position.y),
+                            point2: CGPoint(x: ufo.position.x, y: (ufo.position.y)))
         
         let m2 = 2.00
         
